@@ -1,9 +1,8 @@
 package com.github.kefflen.picpaysimplificado.transaction;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
@@ -17,5 +16,10 @@ public class TransactionController {
     @PostMapping
     public Transaction create(@RequestBody Transaction transaction) {
         return transactionService.create(transaction);
+    }
+
+    @GetMapping
+    public List<Transaction> list() {
+        return transactionService.list();
     }
 }

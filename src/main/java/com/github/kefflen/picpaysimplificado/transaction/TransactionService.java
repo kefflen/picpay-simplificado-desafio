@@ -7,6 +7,7 @@ import com.github.kefflen.picpaysimplificado.wallet.WalletType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -38,6 +39,10 @@ public class TransactionService {
         this.authorizationService.authorize(transaction);
         this.notificationService.notify(transaction);
         return transaction;
+    }
+
+    public List<Transaction> list() {
+        return this.transactionRepository.findAll();
     }
 
     private void validate(Transaction transaction) {

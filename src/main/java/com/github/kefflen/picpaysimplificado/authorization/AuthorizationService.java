@@ -1,11 +1,14 @@
 package com.github.kefflen.picpaysimplificado.authorization;
 
 import com.github.kefflen.picpaysimplificado.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 @Service
 public class AuthorizationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationService.class);
     private final RestClient restClient;
 
     public AuthorizationService(
@@ -16,12 +19,14 @@ public class AuthorizationService {
     }
 
     public void authorize(Transaction transaction) {
+        LOGGER.info("Authorizing transaction: {}", transaction);
         var response = this.restClient.get()
                 .retrieve()
                 .toEntity(Authorization.class);
         if (response.getStatusCode().isError() || !response.getBody().isAuthorized()) {
             throw new UnauthorizedTransactionException("Unauthorized transaction");
         }
+        LOGGER.info("Transaction authorized: {}", transaction);
     }
 
 }

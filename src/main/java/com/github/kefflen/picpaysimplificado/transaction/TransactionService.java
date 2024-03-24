@@ -1,6 +1,7 @@
 package com.github.kefflen.picpaysimplificado.transaction;
 
 import com.github.kefflen.picpaysimplificado.authorization.AuthorizationService;
+import com.github.kefflen.picpaysimplificado.notification.NotificationService;
 import com.github.kefflen.picpaysimplificado.wallet.WalletRepository;
 import com.github.kefflen.picpaysimplificado.wallet.WalletType;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,13 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final WalletRepository walletRepository;
     private final AuthorizationService authorizationService;
+    private final NotificationService notificationService;
 
-    public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository, AuthorizationService authorizationService) {
+    public TransactionService(TransactionRepository transactionRepository, WalletRepository walletRepository, AuthorizationService authorizationService, NotificationService notificationService) {
         this.transactionRepository = transactionRepository;
         this.walletRepository = walletRepository;
         this.authorizationService = authorizationService;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -33,7 +36,7 @@ public class TransactionService {
         this.walletRepository.save(payeeWallet.credit(transactionData.value()));
 
         this.authorizationService.authorize(transaction);
-
+        this.notificationService.notify(transaction);
         return transaction;
     }
 
